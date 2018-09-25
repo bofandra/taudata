@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>tauDATA</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <style>
+    #details {
+      width: 100%;
+      padding: 10px 10px;
+      text-align: left;
+      background-color: #ffff99;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+  <script>
+    function toggle_details(){
+      divelement = document.getElementById('details')
+      if(document.getElementById('seedetails').checked) {
+        divelement.style.display = "block"
+      }else{
+        divelement.style.display = "none"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="display-4">MLP for Regression Analysis{{ fullfile_train }}</h1>
+      <hr class="my-4">
+      <p class="text-muted">Train & Test Data must have the same number of columns.</p>
+      <p class="text-muted">Please, put the dependent numeric variable on the last column.</p>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <form method=POST enctype=multipart/form-data action="{{ url_for('index') }}">
+          <div class="form-group">
+            <label for="train">Train Data</label>
+            <input type="file" name="train_data"/>
+          </div>
+          <pre>{{ dfTrain }}</pre>
+          <div class="form-group">
+            <label for="test">Test Data</label>
+            <input type="file" name="test_data"/>
+          </div>
+          <pre>{{ dfTest }}</pre>
+          <input type="checkbox" id="seedetails" name="seedetails" value="no" onclick="toggle_details()">
+          <label for="seedetails">See detail parameters</label>
+          <fieldset id="details">
+            <div class="form-group">
+              <label for="first_hidden_layer">Number of nodes in first hidden layer</label>
+              <input type="number" id="first_hidden_layer" value=100/>
+            </div>
+            <div class="form-group">
+              <label for="second_hidden_layer">Number of nodes in second hidden layer</label>
+              <input type="number" id="second_hidden_layer"/>
+            </div>
+            <div class="form-group">
+              <label for="activation_function">Activation Function</label>
+              <select name="activation_function">
+                <option value="identity" selected>identity</option>
+                <option value="logistic">logistic</option>
+                <option value="tanh">tanh</option>
+                <option value="relu">relu</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="solver">Solver</label>
+              <select name="solver">
+                <option value="lbfgs" selected>lbfgs</option>
+                <option value="sgd">sgd</option>
+                <option value="adam">adam</option>
+              </select>
+            </div>
+          </fieldset>
+          </br>
+          <div class="form-group">
+            <input type="submit" id="submit" class="btn btn-block" value="Run the Regression Analysis!"/>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div>
+          <div>R Squared = {{ r2 }}</div>
+          <div>RMSE = {{ rmse }}</div>
+          <img src={{ plot }} alt="Chart">
+          <p>Observed vs Predicted = </p>
+          {% block content %}
+            <pre>{% for values in y: %}
+                {{ values }}
+            {% endfor %}</pre>
+          {% endblock content %}
+    </div>
+  </div>
+</body>
