@@ -17,17 +17,19 @@ app = Flask(__name__)
 @app.route('/',methods=['GET','POST'])
 def index():
 	if request.method == 'POST' and 'train_data' in request.files and 'test_data' in request.files:
+		basedir = os.path.abspath(os.path.dirname(__file__))
+
 		#save train data on local machine
 		file = request.files['train_data']
 		filename = secure_filename(file.filename)
-		file.save(os.path.join('static/uploadsDB',filename))
-		fullfile_train = os.path.join('static/uploadsDB',filename)
+		file.save(os.path.join(basedir,'static/uploadsDB',filename))
+		fullfile_train = os.path.join(basedir,'static/uploadsDB',filename)
 
 		#save test data on local machine
 		file = request.files['test_data']
 		filename = secure_filename(file.filename)
-		file.save(os.path.join('static/uploadsDB',filename))
-		fullfile_test = os.path.join('static/uploadsDB',filename)
+		file.save(os.path.join(basedir,'static/uploadsDB',filename))
+		fullfile_test = os.path.join(basedir,'static/uploadsDB',filename)
 
 		#separate target & features
 		dfTrain = pd.read_csv(fullfile_train)
