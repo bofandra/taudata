@@ -11,6 +11,8 @@ from sklearn.metrics import r2_score
 import numpy as np
 import matplotlib.pyplot as plt
 
+from os.path import relpath
+
 app = Flask(__name__)
 
 
@@ -68,11 +70,12 @@ def index():
 
 		plt.scatter(range(y_pred.size),y_pred-y_test,color="b")
 		plt.axhline()
-		filename = secure_filename('new_plot.png')
+		filename = secure_filename('new_plot2.png')
 		chart_url = os.path.join(basedir,'static/images',filename)
 		plt.savefig(chart_url)
+		chart_url_2 = relpath(chart_url, basedir)
 
-		return render_template('index.html',fullfile_train=fullfile_train,r2=r2,rmse=rmse,dfTrain=dfTrain,dfTest=dfTest,dfResult=dfResult,y=zip(y_pred,y_test),plot=chart_url,req=request.args)
+		return render_template('index.html',fullfile_train=fullfile_train,r2=r2,rmse=rmse,dfTrain=dfTrain,dfTest=dfTest,dfResult=dfResult,y=zip(y_pred,y_test),plot=chart_url_2,req=request.args)
 	else:
 		return render_template('index.html')
 
