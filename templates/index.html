@@ -9,10 +9,16 @@
       width: 100%;
       padding: 10px 10px;
       text-align: left;
-      background-color: #ffff99;
+      background-color: lightyellow;
       margin-top: 5px;
       display: none;
     }
+    fieldset{
+      margin-top: 5px;
+      padding: 10px 10px;
+      background-color: papayawhip;
+    }
+
   </style>
   <script>
     function toggle_details(){
@@ -36,44 +42,59 @@
     <div class="row">
       <div class="col-xs-12">
         <form method=POST enctype=multipart/form-data action="{{ url_for('index') }}">
-          <div class="form-group">
-            <label for="train">Train Data</label>
-            <input type="file" name="train_data"/>
-          </div>
-          <pre>{{ dfTrain }}</pre>
-          <div class="form-group">
-            <label for="test">Test Data</label>
-            <input type="file" name="test_data"/>
-          </div>
-          <pre>{{ dfTest }}</pre>
-          <input type="checkbox" id="seedetails" name="seedetails" value="no" onclick="toggle_details()">
-          <label for="seedetails">See detail parameters</label>
-          <fieldset id="details">
-            <div class="form-group">
-              <label for="first_hidden_layer">Number of nodes in first hidden layer</label>
-              <input type="number" id="first_hidden_layer" value=100/>
+          <fieldset>
+            <legend><b>1. Data Source</b></legend>
+            <div id="form-group">
+                <label for="train">Train Data</label>
+                <input type="file" name="train_data"/>
             </div>
+            <pre>{{ dfTrain }}</pre>
+
             <div class="form-group">
-              <label for="second_hidden_layer">Number of nodes in second hidden layer</label>
-              <input type="number" id="second_hidden_layer"/>
+                <label for="test">Test Data</label>
+                <input type="file" name="test_data"/>
             </div>
-            <div class="form-group">
-              <label for="activation_function">Activation Function</label>
-              <select name="activation_function">
-                <option value="identity" selected>identity</option>
-                <option value="logistic">logistic</option>
-                <option value="tanh">tanh</option>
-                <option value="relu">relu</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="solver">Solver</label>
-              <select name="solver">
-                <option value="lbfgs" selected>lbfgs</option>
-                <option value="sgd">sgd</option>
-                <option value="adam">adam</option>
-              </select>
-            </div>
+            <pre>{{ dfTest }}</pre>
+          </fieldset>
+
+          <fieldset>
+            <legend><b>2. Data Exploratory</b></legend>
+          </fieldset>
+
+          <fieldset>
+            <legend><b>3. Data Analysis</b></legend>
+            <input type="checkbox" id="seedetails" name="seedetails" value="no" onclick="toggle_details()">
+            <label for="seedetails">See detail parameters</label>
+            <fieldset id="details">
+              <div class="form-group">
+                <label for="first_hidden_layer">Number of nodes in first hidden layer</label>
+                <input type="number" name="first_hidden_layer" value="100" min="0"/>
+              </div>
+              {{node1}}
+              <div class="form-group">
+                <label for="second_hidden_layer">Number of nodes in second hidden layer</label>
+                <input type="number" name="second_hidden_layer" value="0" min="0"/>
+              </div>
+              {{node2}}
+              <div class="form-group">
+                <label for="activation_function">Activation Function</label>
+                <select name="activation_function">
+                  <option value="relu" selected>relu</option>
+                  <option value="identity">identity</option>
+                  <option value="logistic">logistic</option>
+                  <option value="tanh">tanh</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="solver">Solver</label>
+                <select name="solver">
+                  <option value="adam" selected>adam</option>
+                  <option value="lbfgs">lbfgs</option>
+                  <option value="sgd">sgd</option>
+                </select>
+              </div>
+              <pre>{{nn}}</pre>
+            </fieldset>
           </fieldset>
           </br>
           <div class="form-group">
@@ -82,7 +103,10 @@
         </form>
       </div>
     </div>
+
+    {% if r2: %}
     <div>
+      <legend>Results</legend>
           <div>R Squared = {{ r2 }}</div>
           <div>RMSE = {{ rmse }}</div>
           <img src={{ plot }} alt="Chart">
@@ -93,5 +117,6 @@
             {% endfor %}</pre>
           {% endblock content %}
     </div>
+    {% endif %}
   </div>
 </body>

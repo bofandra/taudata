@@ -47,7 +47,13 @@ def index():
 		#sel.fit_transform(x_train)
 
 		#create knowledge model
-		nn = MLPRegressor(learning_rate_init=0.01)
+		node1 = request.form['first_hidden_layer']
+		node2 = request.form['second_hidden_layer']
+		if int(node2) == 0:
+			nodes = (int(node1),)
+		else:
+			nodes = (int(node1),int(node2))
+		nn = MLPRegressor(learning_rate_init=0.01,hidden_layer_sizes=nodes,activation=request.form['activation_function'],solver=request.form['solver'])
 		nn.fit(x_train,y_train)
 
 		#predict test data
@@ -75,7 +81,7 @@ def index():
 		plt.savefig(chart_url)
 		chart_url_2 = relpath(chart_url, basedir)
 
-		return render_template('index.html',fullfile_train=fullfile_train,r2=r2,rmse=rmse,dfTrain=dfTrain,dfTest=dfTest,dfResult=dfResult,y=zip(y_pred,y_test),plot=chart_url_2,req=request.args)
+		return render_template('index.html',fullfile_train=fullfile_train,r2=r2,rmse=rmse,dfTrain=dfTrain,dfTest=dfTest,dfResult=dfResult,y=zip(y_pred,y_test),plot=chart_url_2,req=request.args,node1=node1,node2=node2,nn=nn,nodes=nodes)
 	else:
 		return render_template('index.html')
 
